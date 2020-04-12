@@ -1,0 +1,169 @@
+﻿@using Ecommerce.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@model ProductDetailModel
+
+@section scripts {
+    <script>
+
+    </script>
+}
+
+<!-- Page Content -->
+
+<div class="container">
+
+    <!-- Portfolio Item Heading -->
+    <!-- Portfolio Item Row -->
+    @*<div id="chatroom">
+            <div class="row">
+
+                <div class="col-md-8">
+                    <img class="img-fluid" style="width:500px;height:400px" src="@Model.Product.Images[0].ImagePath" alt="">
+                </div>
+
+                <div class="col-md-4">
+                    <h3 class="my-3">@Model.Product.Name</h3>
+                    <p>@Model.Product.Detail</p>
+                    <h3 class="my-3">Project Details</h3>
+                    <ul>
+                        <li>Lorem Ipsum</li>
+                        <li>Dolor Sit Amet</li>
+                        <li>Consectetur</li>
+                        <li>Adipiscing Elit</li>
+                    </ul>
+                    <div>
+                        <a href="@Url.ActionLink("Room","ChatRoom",new {productID = Model.Product.ID })" id="joinGroup">gagsdg</a>
+                        <input type="button" id="joinGroup" value="Join private Group" v-on:click.prevent="InitPrivateChatRoom(@Model.Product.ID)" />
+                    </div>
+                </div>
+
+            </div>
+        </div>*@
+    <div class="col-md-12 mb-1 border-bottom">
+        <section class="panel">
+            <div class="panel-body row">
+                <div class="col-md-6">
+                    <div class="pro-img-details">
+                        <img id="myImg" src="@Model.Product.Images[0].ImagePath" alt="" width="400" height="300">
+                        <!-- The Modal -->
+                        <div id="myModal1" class="modal">
+                            <span id="closeimage" class="close text-danger">&times;</span>
+                            <img class="modal-content" id="img01">
+                            <div id="caption"></div>
+                        </div>
+                    </div>
+                    <div class="pro-img-list">
+                        @foreach (var image in Model.Product.Images)
+                        {
+                            <a href="#">
+                                <img src="@image.ImagePath" alt="" width="80" height="80" class="mt-1">
+                            </a>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="pro-d-title">
+                        <a href="#" class="">
+                            @Model.Product.Name
+                        </a>
+                    </h4>
+                    <div class="m-bot15 border-bottom border-danger"> <strong>Giá : </strong> <span class="amount-old text-danger">@Model.Product.Price</span></div>
+                    <p>
+                        @Model.Product.Description
+
+                    </p>
+                    <div class="form-group">
+                        <label>Tình trạng:</label>
+                        @Model.Product.StateName
+                        <br />
+                        <label>Địa chỉ người bán:</label>
+                        @Model.Product.DistrictName - @Model.Product.ProvinceName
+                    </div>
+                    <div class="product_meta">
+                        <span class="posted_in">
+                            <strong>Categories:</strong>
+                            @foreach (var cate in Model.ProductCategorys)
+                            {
+                                <a rel="tag" href="#">@cate.Name,</a>
+                             }
+                        </span>
+
+                    </div>
+                    <br />
+                    <p>
+                        <button class="btn btn-round btn-success" type="button"><i class="fa fa-phone"></i> 09867867</button>
+                        
+                        <a class="btn btn-round btn-primary" href="@Url.ActionLink("Room","ChatRoom",new {productID = Model.Product.ID })" ><i class="fa fa-paper-plane"></i> nhắn tin</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+   
+    <!-- /.row -->
+    <!-- Related Projects Row -->
+    <h3 class="my-4">Sản Phẩm Liên Quan:</h3>
+
+    <div class="row">
+        <div class="row text-center">
+            @foreach (var item in Model.RelateProducts)
+            {
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        @if (item.Images.Count > 0)
+                        {
+                            <a href="@Url.Action("ProductDetail", "Home", new { id = item.ID })"><img class="card-img-top p-3" src="@item.Images[0].ImagePath " alt="" style="max-width:100%; height:225px; max-height:100%"></a>
+                        }
+                        <div class="card-body">
+                            <a class="card-title" href="">@UserManager.GetUserName(User)</a>
+                            <h6 class="card-title text-dark">@item.Name</h6>
+                            <p class="card-text">@Html.Raw(item.Detail)</p>
+                            <p class="card-text text-danger">@item.Price</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="card-text"><i class="fa fa-map-marker text-danger"></i>@item.ProvinceName-@item.DistrictName</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="card-text">@item.StateName</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal1");
+
+    // Get the image and insert it inside the modal - use its "alt" text as a caption
+    var img = document.getElementById("myImg");
+    var modalImg = document.getElementById("img01");
+    var captionText = document.getElementById("caption");
+    img.onclick = function () {
+        modal.style.display = "block";
+        modalImg.src = this.src;
+        captionText.innerHTML = this.alt;
+    }
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementById("closeimage");
+
+    // When the user clicks on <span> (x), close the modal
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+</script>

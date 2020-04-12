@@ -1,0 +1,137 @@
+﻿@{
+
+    ViewBag.Title = "Users";
+    ViewBag.MenuItem = "Users";
+
+    var userIsDelete = Context.Request.Query["d"] == "1";
+}
+
+
+@section scripts{
+    
+    <script src="@Url.Content("~/Admin/assets/notifications.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/admin/Assets/ProductCategory/ProductCategorylist.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Admin/assets/alert.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+       var baseUrl = "@Url.Content("~/")";
+        productcategorylist.currentUserName = "@User.Identity.Name";
+        productcategorylist.load();
+        @if (userIsDelete) {
+            <text>
+            notifications.push({
+                body: "The user has been deleted.",
+                type: "success",
+                hide: true
+            });
+            </text>
+        }
+    </script>
+}
+<div id="alert" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" :class="{ 'modal-sm': !verifyPhrase }" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }}</h5>
+            </div>
+            <div class="modal-body text-center">
+                <p v-html="body"></p>
+                <div v-if="verifyPhrase" class="alert alert-danger w-100">
+                    <p v-html="verifyText"></p>
+                    <div class="form-group">
+                        <input v-model="verifyInput" type="text" class="form-control" :placeholder="verifyPlaceholder">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" v-on:click.prevent="cancel()">
+                    <i v-if="cancelIcon" :class="cancelIcon"></i>{{ cancelText }}
+                </button>
+                <button type="button" class="btn btn-labeled" :class="confirmCss" :disabled="!canConfirm()" v-on:click.prevent="confirm()">
+                    <i v-if="confirmIcon" :class="confirmIcon"></i>{{ confirmText }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>
+<div id="productcategorylist">
+    <div class="top">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Settings</li>
+                <li class="breadcrumb-item active" aria-current="page">productCategories</li>
+            </ol>
+        </nav>
+
+        <div class="container-fluid app" :class="{ ready: !loading }">
+            <div class="top-nav">
+
+                <a href="@Url.Action("Edit")" class="btn btn-primary btn-labeled">
+                    <i class="fa fa-plus"></i>Add
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid app" :class="{ ready: !loading }">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Image</th>
+                    <th class="text-center">Parent</th>
+                    <th class="text-center">Status</th>
+                    <th class="actions one">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="productCategory in productcategories.items">
+                    <td class="text-center">
+                        <img style="padding-right: 10px">
+                        {{ productCategory.id }}
+                    </td>
+                    <td class="text-center">
+                        <a :href="'/admin/productcategory/' + productCategory.id">{{ productCategory.name }}</a>
+                    </td>
+
+                    <td class="text-center">
+
+                        <img class="col-md-3" :src="productCategory.image" />
+
+                    </td>
+                    <td class="text-center">
+                        {{ productCategory.categoryName }}
+                    </td>
+                    <td class="text-center">
+                        {{ productCategory.status }}
+                    </td>
+                    <td class="actions one">
+                        <a class="danger" v-on:click.prevent="remove(productCategory)" v-if="productCategory.name != currentUserName">
+                            <span class="fa fa-trash"></span>
+
+                        </a>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div class="container ">
+            <ul class="pagination pull-right">
+                <li v-if="productcategories.hasPrevious" v-on:click="prevPage" class="page-item"><a class="page-link" href="#">Previous</a></li>
+                
+                <li v-for="page in productcategories.pages" :class="{active: page===pageNumber+1,'page-item':pageItem}">
+                    <a class="page-link" v-on:click="selectPage(page)" href="#">{{page}}</a>
+                </li>
+                @*<li class="i in page-item active"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+                <li v-if="productcategories.hasNext" v-on:click="nextPage" class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </div>
+        
+    </div>
+</div>

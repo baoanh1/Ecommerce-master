@@ -1,0 +1,218 @@
+﻿@using Ecommerce.WebApp.Areas.Admin.ProductModel
+@using Ecommerce.WebApp.Areas.Admin.Functions
+@model IEnumerable<ProductEditModel>
+@{
+    var productId = ViewBag.productID;
+    var isNewUser = productId == 0;
+
+    if (isNewUser)
+    {
+        ViewBag.Title = "Add user";
+    }
+    else
+    {
+        ViewBag.Title = "Edit user";
+    }
+    ViewBag.MenuItem = "Users";
+}
+@section scripts {
+    <script src="~/lib/fileman/js/jquery-2.1.1.min.js"></script>
+    <script src="~/lib/fileman/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="@Url.Content("~/Admin/assets/notifications.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/admin/Assets/ProductCategory/ProductCategoryEdit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Admin/assets/alert.js")" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+        var baseUrl = "@Url.Content("~/")";
+        productcategorylist.load("@productId", @(isNewUser ? 1 : 0));
+    </script>
+    <script>
+        function openCustomRoxy2() {
+
+            $('#roxyCustomPanel2').dialog({ modal: true, width: 875, height: 600 });
+
+        }
+        function closeCustomRoxy2(id) {
+            if (!productcategorylist.isNewProduct && productcategorylist.isData) {
+                var imagecontain = document.getElementById("image-contain");
+                imagecontain.remove();
+            }
+            var imagecontain = document.getElementById("image-contain");
+            if (imagecontain!=null) {
+                imagecontain.remove();
+            }
+           
+            $('#roxyCustomPanel2').dialog('close');
+            var path = $('#' + id).val();
+            var total_file = document.getElementById("txtSelectedFile");
+
+            $('#image_preview').append("<div id='image-contain' class='col-md-2'><img class='img-responsive' src='" + path + "' style='height: 150px;width: 150px;padding-top:10px'><span class='delete fa fa-trash' onClick='deletePreview(this)'>Remove</span></div> ");
+
+        }
+        function removeaddimage() {
+            var divid = document.getElementById("divcontain");
+            divid.remove();
+        };
+
+    </script>
+    <script>
+        function deletePreview(ele, i) {
+            "use strict";
+            try {
+                $(ele).parent().remove();
+                window.filesToUpload.splice(i, 1);
+            } catch (e) {
+                console.log(e.message);
+            }
+
+        }
+
+
+
+            //function preview_images() {
+            //    var total_file = document.getElementById("txtSelectedFile").files.length;
+            //    for (var i = 0; i < total_file; i++) {
+            //        $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' src='" + URL.createObjectURL(event.target.files[i]) + "' style='height: 200px;width: 150px;padding-top:3px'><span class='delete fa fa-trash' onClick='deletePreview(this, " + i + ")'>Remove</span></div> ");
+            //    }
+            //}
+
+    </script>
+
+
+}
+
+
+<form id="usereditForm" class="form validate" novalidate>
+    <div id="productcategorylist">
+
+        <div class="top">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Settings</li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("List")">ProductCategories</a></li>
+                    <li v-if="!loading" class="breadcrumb-item active" aria-current="page">
+                        <span v-if="isNew">Add</span>
+                        <span v-else>Edit</span>
+                    </li>
+
+
+
+
+
+                </ol>
+            </nav>
+
+            <div class="container-fluid app" :class="{ ready: !loading }">
+                <div class="top-nav">
+
+                    @*<button type="submit" class="btn btn-labeled btn-success pull-right" v-on:click.prevent="save()">
+                            <i class="fas fa-save"></i>
+                            <span class="btn-label">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span v-if="isNew">Add</span><span v-else>Save</span>
+                        </button>*@
+
+
+                    <button data-toggle="modal" data-target="#pageSettings" class="btn btn-primary btn-icon"><i class="fas fa-cog"></i></button> <!---->
+                    <div role="group" class="btn-group d-none d-lg-inline-flex">
+                        <button type="submit" class="btn btn-primary btn-labeled" v-on:click.prevent="save()">
+                            <i class="fas fa-save"></i>
+                            Save
+                        </button> <!---->
+                    </div>
+                    <button title="Save" class="btn btn-primary btn-icon d-inline-block d-lg-none"><i class="fas fa-save"></i></button>
+                    <div role="group" class="btn-group d-none d-lg-inline-flex">
+                        <button type="button" class="btn btn-success btn-labeled">
+                            <i class="fas fa-check"></i>
+                            Publish
+                        </button> <!---->
+                    </div>
+                    <button title="Publish" class="btn btn-success btn-icon d-inline-block d-lg-none"><i class="fas fa-check"></i></button> <!---->
+                    <button v-if="!isNewProduct && productModel" title="Radera" class="btn btn-danger btn-icon" v-on:click.prevent="remove(productModel.productCategory.id)"><i class="fas fa-trash"></i></button>
+
+                </div>
+            </div>
+        </div>
+        <div id="pageSettings" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title"><i class="fas fa-cog"></i> Settings</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="productModel" class="container-fluid app" :class="{ ready: !loading }">
+            <div class="card">
+                <div class="card-header">
+                    <span class="title">General information</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input v-model="productModel.productCategory.name" class="form-control small" maxlength="128" required />
+                        <div class="invalid-feedback">
+                            Title required.
+                        </div>
+                    </div>
+
+
+
+                    @*<input type="text" id="txtSelectedFile" value="Add image" onclick="openCustomRoxy2()" style="width:100%;">
+        <div id="roxyCustomPanel2" style="display: none;">
+            <iframe src="/lib/fileman/index.html?integration=custom&type=image&txtFieldId=txtSelectedFile" style="width:100%;height:100%; border:1px solid #ccc" frameborder="0">
+            </iframe>
+        </div>*@
+        
+                    <input v-if="!isNewProduct&&isData" type="button" class="btn btn-primary" value="Click to update image" v-on:click.prevent="loadimage()" />
+
+
+                    <input v-else type="button" class="btn btn-primary" value="Click to add images" v-on:click.prevent="add(0)" />
+                    <hr />
+                    <div id="fooBar"></div>
+
+                    <div class="row" id="image_preview"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="title">Product Category</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @*<select required class="form-control" name="categoryID">
+
+            <option value="0">Parent category</option>
+            @{var myhtml = ""; Function.cate_parent(Model.p..cateproducts, ref myhtml, 0, "--", 0);}
+            @Html.Raw(myhtml);
+        </select>*@
+                            <select id="myselect" class="form-control" :required="true" v-model.number="productModel.productCategory.parentID">
+                            </select>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
+
+                            @*<select class="form-control" :required="true" v-model="productModel.productCategory.parentID">
+                                <option value="0">Select category </option>
+                                <option v-for="option in getProductRows()"
+                                        v-bind:value="option.id">
+                                    {{ option.name }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback">
+                                required
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

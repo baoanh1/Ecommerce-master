@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Ecommerce.WebApp.Areas.Identity.ViewModels
+@model RoleEditModel
+@inject IAuthorizationService Auth
+@{
+    ViewBag.Title = "Edit role";
+    ViewBag.MenuItem = "Roles";
+}
+
+@using (var form = Html.BeginForm("Save", "Role", FormMethod.Post, new { @class = "form validate", role = "form", novalidate = "" }))
+{
+    @Html.HiddenFor(m => m.Role.Id)
+
+    <div class="top">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Settings</li>
+                <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("List")">Roles</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            </ol>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="top-nav">
+                
+                    <button type="submit" class="btn btn-labeled btn-success pull-right">
+                        <span class="btn-label">
+                            <i class="fa fa-check"></i>
+                        </span>
+                        Save
+                    </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <span class="title">General</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            @Html.TextBoxFor(m => m.Role.Name, new { @class = "form-control small", maxlength = 128, required = "" })
+                            <div class="invalid-feedback">
+                               Name is mandatory.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Normalized name</label>
+                            @Html.TextBoxFor(m => m.Role.NormalizedName, new { @class = "form-control small", maxlength = 128 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+}

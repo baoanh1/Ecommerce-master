@@ -1,0 +1,41 @@
+﻿@using  Ecommerce.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@model ProductViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+    <h4>Fresh recommendations</h4>
+<div class="row text-center">
+    @foreach (var item in Model.Products)
+    {
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100">
+                @if (item.Images.Count > 0)
+                {
+                    <a href="@Url.Action("ProductDetail", "Home", new { id = item.ID })"><img class="card-img-top p-3" src="@item.Images[0].ImagePath " alt="" style="width:255px; height:255px"></a>
+                }
+                <div class="card-body">
+                    <a class="card-title" href="">@UserManager.GetUserName(User)</a>
+                    <h6 class="card-title text-dark">@item.Name</h6>
+                    <p class="card-text">@Html.Raw(item.Detail)</p>
+                    <p class="card-text text-danger">@item.Price</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="card-text"><i class="fa fa-map-marker text-danger"></i>@item.ProvinceName-@item.DistrictName</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="card-text">@item.StateName</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+
+
+</div>
+

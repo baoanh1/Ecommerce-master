@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewData["Title"] = "Room";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userids = ViewBag.UserIDs;
+    var productid = ViewBag.productid;
+
+}
+@section scripts{
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/Assset/Pront/Chatroom.js"></script>
+    <script>
+
+        mychatroom.currentUserName = "@User.Identity.Name";
+        var baseUrl = "@Url.Content("~/")";
+        mychatroom.load("@userids","@productid");
+    </script>
+}
+<h1>Room</h1>
+
+<div id="chatroom">
+    {{messages.length}}
+    <input type="button" v-for="mes in chatroomlist.chats" :value="mes.id" v-on:click.prevent="viewmessage(mes.userIDs)" />
+<textarea name="message" id="message">
+</textarea>
+
+
+    <input type="button" id="sendButton" value="Send Message" v-on:click.prevent="SendButton()" />
+    <div id="messagesID"></div>
+
+    <form id="group-chat" class="form-horizontal col-md-8" role="form" method="POST" v-on:submit.prevent="sendMessage">
+
+        <div id="messages">
+            <div v-if="messages.length">
+                <message v-for="message in messages" :key="message.id" :sender="message.senderID" :message="message.mes" :createdat="message.createdDate"></message>
+            </div>
+            <div v-else>
+                <div class="alert alert-warning">No chat yet!</div>
+            </div>
+        </div>
+        <span class="typing" v-if="isTyping"><i><span></span> is typing</i></span>
+        <hr />
+        <div class="form-group chat-box">
+            <div class="col-md-10">
+                <textarea v-model="chatroomlist.message.mes" type="textarea" class="form-control" name="message" v-on:keyup.enter="sendMessage" v-on:keypress="" required autofocus></textarea>
+
+
+
+            </div>
+            <div class="col-md-2 chat-btn">
+                <button type="submit" class="sendchat btn btn-primary" v-on:submit.prevent="sendMessage" :disabled="!chatroomlist.message.mes">
+                    Send
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+@*<div>*@
+
+
+<!-- /* right */ -->
+@*<div id="show-data" class="col-md-8 ">
+
+        <div class="MessageSectionHeader MessageHeader">
+            <div id="ChatNameSection" class="col-xs-12 center-text ChatNameSection">
+                <div class="visible-xs-inline-block visible-sm-inline-block pull-left"><a class="pull-left visible-xs-inline-block visible-sm-inline-block backBtnWrapper" href="/messages"><span class="glyphicon glyphicon-menu-left"></span></a></div>
+                <div class="NameWrapper">
+                    <img src="https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png" alt="avatar" class="PartnerAvatar">
+                    <div class="NameFeild">
+                        {{$receiver->name}}
+                        <p class="ActiveTime">
+                            <span class="OnlineStatus Offline"></span><?php
+
+                        </p>
+                    </div>
+                </div>
+                <div class="RightTopHeaderWrapper">
+                    <a class="item CallButton"><img src="https://static.chotot.com/storage/chotot-icons/png/call-green.png" alt="call-icon" class="headerIcon">Gọi điện</a>
+                    <div class="report-wrapper PrivacyBtn">
+                        <div class="dropdown btn-group btn-group-btn-no-boder">
+                            <button id="bg-nested-dropdown" role="button" aria-haspopup="true" aria-expanded="false" type="button" class="reportDropDown glyphicon glyphicon-option-vertical btn-lg dropdown-menu-right dropdownMenu dropdown-toggle btn btn-btn-no-boder"></button>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="bg-nested-dropdown">
+                                <li role="presentation" class=""><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-ban-circle"></span> Chặn người này<span class="dropdown-header">Chặn gửi hoặc nhận tin nhắn từ người này</span></a></li>
+                                <li role="presentation" class=""><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-flag"></span> Báo xấu<span class="dropdown-header">Báo cáo cho chúng tôi biết về người này</span></a></li>
+                                <li role="presentation" class=""><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-trash"></span> Xoá trò chuyện<span class="dropdown-header">Xoá cuộc trò chuyện với người này</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ChatTitleSection" class="ChatTitleSection col-xs-12 vertical-align">
+                <div>
+                    <div class="media-left">
+                        <a target="blank" href="https://www.chotot.com/49602720.htm">
+                            <div class="ProductImageDiv" style="background-image: url('{{url($product->Image)}}')"></div>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <a class="productTitleUrl" target="blank" href="https://www.chotot.com/49602720.htm">
+                            <p class="productTitleHeader">{{$product->Name}}</p>
+                        </a>
+                        <div class="productPrice">{{$product->Price}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Private Chat with {{ $receiver->name }}</div>
+            <div class="panel-body">
+
+                <form id="group-chat" class="form-horizontal" role="form" method="POST" v-on:click.prevent="sendMessage()">
+
+                    <div id="messages">
+                        <div v-if="messages.length">
+                            <message v-for="message in messages" key="message.id" :sender="message.sender.name" :message="message.message" :createdat="message.created_at"></message>
+                        </div>
+                        <div v-else>
+                            <div class="alert alert-warning">No chat yet!</div>
+                        </div>
+                    </div>
+                    <span class="typing" v-if="isTyping"><i><span>{{ isTyping }}</span> is typing</i></span>
+                    <hr />
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} chat-box">
+                        <div class="col-md-10">
+                            <textarea v-model="message" type="textarea" class="form-control" name="message" v-on:keyup.enter="sendMessage"v-on:keypress="userIsTyping({{$chatRoom->id}})" required autofocus></textarea>
+
+
+                        </div>
+                        <div class="col-md-2 chat-btn">
+                            <button type="submit" class="sendchat btn btn-primary" :disabled="!message">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="MessageSectionHeader MessageHeader">
+            <div id="ChatNameSection" class="col-xs-12 center-text ChatNameSection">
+                <div class="EmptyChatRoom"></div>
+            </div>
+        </div>
+
+
+    </div>*@
+

@@ -1,0 +1,317 @@
+﻿@using Ecommerce.WebApp.Areas.Admin.ProductModel
+@using Ecommerce.WebApp.Areas.Admin.Functions
+@using Microsoft.AspNetCore.Identity
+@using Ecommerce.Data.Entities
+@using Ecommerce.Identity.Areas.Identity.ViewModels
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@model IEnumerable<ProductEditModel>
+@{
+    var productId = ViewBag.productID;
+    var isNewUser = productId == 0;
+
+    if (isNewUser)
+    {
+        ViewBag.Title = "Add user";
+    }
+    else
+    {
+        ViewBag.Title = "Edit user";
+    }
+    ViewBag.MenuItem = "Users";
+}
+@section scripts {
+    <script src="~/lib/fileman/js/jquery-2.1.1.min.js"></script>
+    <script src="~/lib/fileman/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="@Url.Content("~/Admin/assets/notifications.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/admin/Assets/Product/ProductEdit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Admin/assets/alert.js")" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+        var baseUrl = "@Url.Content("~/")";
+        productedit.load("@productId", @(isNewUser ? 1 : 0));
+    </script>
+    <script>
+        function openCustomRoxy2(i) {
+
+            $('#roxyCustomPanel2' + i).dialog({ modal: true, width: 875, height: 600 });
+        }
+        function closeCustomRoxy2(fieldId) {
+            var index = fieldId.slice(-1);
+            $('#roxyCustomPanel2' + index).dialog('close');
+        }
+        function removeaddimage(id) {
+            var divid = document.getElementById("divcontain" + id);
+            divid.remove();
+        };
+    </script>
+    <script>
+        function deletePreview(ele, i) {
+            "use strict";
+            try {
+                $(ele).parent().remove();
+                window.filesToUpload.splice(i, 1);
+            } catch (e) {
+                console.log(e.message);
+            }
+        }
+
+
+
+        function preview_images() {
+            var total_file = document.getElementById("files").files.length;
+            for (var i = 0; i < total_file; i++) {
+                $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' src='" + URL.createObjectURL(event.target.files[i]) + "' style='height: 200px;width: 150px'><span class='delete fa fa-trash' onClick='deletePreview(this, " + i + ")'>Remove</span></div> ");
+            }
+        }
+        
+        
+       
+    </script>
+
+
+}
+
+
+<form id="usereditForm" class="form validate" novalidate>
+    <div id="productedit">
+
+        <div class="top">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Settings</li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("List")">Products</a></li>
+                    <li v-if="!loading" class="breadcrumb-item active" aria-current="page">
+                        <span v-if="isNew">Add</span>
+                        <span v-else>Edit</span>
+                    </li>
+
+
+
+
+
+                </ol>
+            </nav>
+
+            <div class="container-fluid app" :class="{ ready: !loading }">
+                <div class="top-nav">
+
+                    @*<button type="submit" class="btn btn-labeled btn-success pull-right" v-on:click.prevent="save()">
+                            <i class="fas fa-save"></i>
+                            <span class="btn-label">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span v-if="isNew">Add</span><span v-else>Save</span>
+                        </button>*@
+
+
+                    <button data-toggle="modal" data-target="#pageSettings" class="btn btn-primary btn-icon"><i class="fas fa-cog"></i></button> <!---->
+                    <div role="group" class="btn-group d-none d-lg-inline-flex">
+                        <button type="submit" class="btn btn-primary btn-labeled" v-on:click.prevent="save()">
+                            <i class="fas fa-save"></i>
+                            Save
+                        </button> <!---->
+                    </div>
+                    <button title="Save" class="btn btn-primary btn-icon d-inline-block d-lg-none"><i class="fas fa-save"></i></button>
+                    <div role="group" class="btn-group d-none d-lg-inline-flex">
+                        <button type="button" class="btn btn-success btn-labeled">
+                            <i class="fas fa-check"></i>
+                            Publish
+                        </button> <!---->
+                    </div>
+                    <button title="Publish" class="btn btn-success btn-icon d-inline-block d-lg-none"><i class="fas fa-check"></i></button> <!---->
+                    <button v-if="!isNewProduct && productModel" title="Radera" class="btn btn-danger btn-icon" v-on:click.prevent="remove(productModel.product.id)"><i class="fas fa-trash"></i></button>
+
+                </div>
+            </div>
+        </div>
+        <div id="pageSettings" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title"><i class="fas fa-cog"></i> Settings</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="productModel" class="container-fluid app" :class="{ ready: !loading }">
+            <div class="card">
+                <div class="card-header">
+                    <span class="title">General information</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input v-model="productModel.product.name" class="form-control small" maxlength="128" required />
+                        <div class="invalid-feedback">
+                            Title required.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="title">Address</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                               
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Province</label>
+                                            <select class="form-control" :required="true" v-on:change="onChange($event)" v-model="productModel.product.provinceID">
+                                                <option value="0">Select Province </option>
+                                                <option v-for="option in productModel.provinces"
+                                                        v-bind:value="option.id">
+                                                    {{option.name}}
+                                                </option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>District</label>
+                                            <select class="form-control" :required="true" v-model="productModel.product.districtID">
+                                                <option value="0">Select Province </option>
+                                                <option v-for="option in districts"
+                                                        v-bind:value="option.id">
+                                                    {{option.name}}
+                                                </option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <label v-for="possibleAnswer in productModel.states"
+                                                       :key="possibleAnswer.id"
+                                                       class="answer-radio-container pl-5">
+
+                                                    <input :value="possibleAnswer.id"
+                                                           :id="possibleAnswer.id"
+                                                           v-model.number="productModel.product.stateID"
+                                                           type="radio" class="custom-control-input pl-5">
+                                                    <span class="answer-radio-checkmark custom-control-label" />
+                                                    {{ possibleAnswer.name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input v-if="!isNewProduct&&productModel.productImages!=0" type="button" class="btn btn-primary" value="Click to update image" v-on:click.prevent="loadimage()" />
+
+                        <input v-if="productModel.productImages===0" type="button" class="btn btn-primary" value="Click to add images" v-on:click.prevent="add(0)" />
+                        <input v-else type="button" class="btn btn-primary" value="Click to add images" v-on:click.prevent="add(productModel.productImages.length)" />
+                        <hr />
+                        <div id="fooBar"></div>
+                        @*<input id="files" name="files" type="file" class="form-control" style="visibility:unset;" onchange="preview_images()" multiple />*@
+                        @*<div class="row" id="image_preview"></div>*@
+
+                        @*<input type="text"  id="txtSelectedFile" value="Add image" onclick="openCustomRoxy2()">
+            <div id="roxyCustomPanel2" style="display: none;">
+                <iframe src="/lib/fileman/index.html?integration=custom&type=image&txtFieldId=txtSelectedFile" style="width:100%;height:100%; border:1px solid #ccc" frameborder="0">
+                </iframe>
+            </div>*@
+
+                        <input id="CurrentUserID" hidden type="text" name="CurrentUserID" value="@UserManager.GetUserId(User)" />
+                        <tinymce v-model="productModel.product.detail"
+                                 :plugins="myPlugins" :toolbar1="myToolbar1" :toolbar2="myToolbar2"
+                                 :other="myOtherOptions">
+
+                        </tinymce>
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="title">Product</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>Price</label>
+                                                <input type="text" v-model.number="productModel.product.price" class="form-control small" maxlength="128" required />
+                                                <div class="invalid-feedback">
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>PromotionPrice</label>
+                                                <input type="text" v-model.number="productModel.product.promotionPrice" class="form-control small" maxlength="128" required />
+                                                <div class="invalid-feedback">
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>Quantity</label>
+                                                <input type="text" v-model.number="productModel.product.quantity" class="form-control small" maxlength="128" required />
+                                                <div class="invalid-feedback">
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="title">Product Category</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @*<select required class="form-control" name="categoryID">
+
+            <option value="0">Parent category</option>
+            @{var myhtml = ""; Function.cate_parent(Model.p..cateproducts, ref myhtml, 0, "--", 0);}
+            @Html.Raw(myhtml);
+        </select>*@
+
+
+                            <select id="myselect" class="form-control" :required="true" v-model.number="productModel.product.categoryID">
+                            </select>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
+                            @*<select class="form-control" :required="true" v-model="productModel.product.categoryID">
+                                <option value="0">Select category </option>
+                                <option v-for="option in getProductRows()"
+                                        v-bind:value="option.id">
+                                    {{option.name}}
+                                </option>
+                            </select>*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

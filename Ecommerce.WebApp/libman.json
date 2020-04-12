@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "vue@2.6.11",
+      "destination": "wwwroot/lib/vue/",
+      "files": [
+        "vue.min.js",
+        "vue.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@aspnet/signalr@1.1.4",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@4.3.0",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "dist/js/bootstrap.js",
+        "dist/js/bootstrap.min.js",
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap.min.css"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "font-awesome@4.7.0",
+      "destination": "wwwroot/lib/font-awesome/",
+      "files": [
+        "css/font-awesome.min.css",
+        "css/font-awesome.css"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "tinymce@4.9.9",
+      "destination": "wwwroot/lib/tinymce/",
+      "files": [
+        "jquery.tinymce.js",
+        "jquery.tinymce.min.js",
+        "readme.md"
+      ]
+    }
+  ]
+}
