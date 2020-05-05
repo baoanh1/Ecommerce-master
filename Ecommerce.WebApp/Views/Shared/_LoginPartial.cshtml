@@ -8,10 +8,11 @@
 {
 
 
-    <ul class="nav navbar-nav navbar-right mr-2">
-        <li class="pl-2"><a class="btn btn-warning text-white" href="@Url.Content("~/user/product")">Dang Tin</a></li>
+    <div class="nav navbar-nav navbar-right mr-2">
+        <a class="fa fa-edit btn btn-warning text-white" href="@Url.Content("~/user/product")"> Dang Tin</a>
+        <a class="fa fa-commenting-o btn btn-warning text-white ml-2" href="@Url.Content("~/ChatRoom/Room?productID=0")">Chat</a>
 
-    </ul>
+    </div>
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -98,7 +99,7 @@
                 </h6>
                 <a class="dropdown-item d-flex align-items-center" href="~/Assset/Admin/#">
                     <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+                        <img class="rounded-circle" src="" alt="">
                         <div class="status-indicator bg-success"></div>
                     </div>
                     <div class="font-weight-bold">
@@ -108,7 +109,7 @@
                 </a>
                 <a class="dropdown-item d-flex align-items-center" href="~/Assset/Admin/#">
                     <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+                        <img class="rounded-circle" src="" alt="">
                         <div class="status-indicator"></div>
                     </div>
                     <div>
@@ -118,7 +119,7 @@
                 </a>
                 <a class="dropdown-item d-flex align-items-center" href="~/Assset/Admin/#">
                     <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="">
+                        <img class="rounded-circle" src="" alt="">
                         <div class="status-indicator bg-warning"></div>
                     </div>
                     <div>
@@ -128,7 +129,7 @@
                 </a>
                 <a class="dropdown-item d-flex align-items-center" href="~/Assset/Admin/#">
                     <div class="dropdown-list-image mr-3">
-                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="">
+                        <img class="rounded-circle" src="" alt="">
                         <div class="status-indicator bg-success"></div>
                     </div>
                     <div>
@@ -144,15 +145,17 @@
 
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="~/Assset/Admin/#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@UserManager.GetUserName(User)</span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+            <a class="nav-link dropdown-toggle" href="@Url.ActionLink("Index", "Profile")" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+                <i class="far fa-2x fa-user text-warning"></i>
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="~/Assset/Admin/#">
+               
+                
+                <a class="dropdown-item" href="@Url.ActionLink("Index", "Profile")">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
+                    @UserManager.GetUserName(User)
                 </a>
                 <a class="dropdown-item" href="~/Assset/Admin/#">
                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -164,12 +167,12 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" href="~/Assset/Admin/#" data-toggle="modal" data-target="#logoutModal">
-                    
+
                     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
 
 
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"><button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button></i>
-                        
+
 
                     </form>
                 </div>
@@ -182,10 +185,10 @@ else
 {
 
     <ul class="nav navbar-nav navbar-right">
-        <li type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#myModalLogin">
+        <li type="button" class="btn btn-warning mr-2 fa fa-sign-in" data-toggle="modal" data-target="#myModalLogin">
             Login
         </li>
-        <li type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
+        <li type="button" class="btn btn-warning fa fa-registered" data-toggle="modal" data-target="#myModal">
             Register
         </li>
 

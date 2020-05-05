@@ -3,7 +3,7 @@
     data: {
         loading: true,
         productcategories: [],
-        size: 2,
+        size: 4,
         isActive: false,
         pageItem: true,
         
@@ -23,7 +23,7 @@
             this.pageNumber++;
             
             var self = this;
-            fetch(baseUrl + "admin/productcategory/list/" + this.pageNumber * this.size + "/" + this.size + "/" + this.pageNumber)
+            fetch(baseUrl + "admin/productcategory/list/" + this.pageNumber + "/" + this.size+"/"+0)
                 .then(function (response) {
                     return response.json();
                 })
@@ -40,7 +40,7 @@
             this.pageNumber = i;
             this.isActive = true;
             var self = this;
-            fetch(baseUrl + "admin/productcategory/list/" + i * this.size + "/" + this.size + "/" + i)
+            fetch(baseUrl + "admin/productcategory/list/" + i +"/" + this.size + "/" + 0)
                 .then(function (response) {
                     return response.json();
                 })
@@ -56,7 +56,7 @@
         prevPage() {
             this.pageNumber--;
             var self = this;
-            fetch(baseUrl + "admin/productcategory/list/" + this.pageNumber * this.size + "/" + this.size + "/" + this.pageNumber)
+            fetch(baseUrl + "admin/productcategory/list/" + this.pageNumber+ "/" + this.size + "/" + 0)
                 .then(function (response) {
                     return response.json();
                 })

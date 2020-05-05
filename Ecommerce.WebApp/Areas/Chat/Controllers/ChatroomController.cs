@@ -8,11 +8,11 @@ namespace Ecommerce.Identity.Chat.Controllers
 {
     public class ChatroomController : Controller
     {
-        [Area("Chat")]
-        [Route("chatroom")]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //[Area("Chat")]
+        //[Route("chatroom")]
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
     }
 }

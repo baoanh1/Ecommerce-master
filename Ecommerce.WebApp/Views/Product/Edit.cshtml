@@ -82,7 +82,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">Settings</li>
-                    <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("List")">Products</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="@Url.Content("/user/products")">Products</a></li>
                     <li v-if="!loading" class="breadcrumb-item active" aria-current="page">
                         <span v-if="isNew">Add</span>
                         <span v-else>Edit</span>

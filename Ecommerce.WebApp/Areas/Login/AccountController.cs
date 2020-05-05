@@ -102,7 +102,7 @@ namespace Ecommerce.Identity.Areas.Login
         {
             if (ModelState.IsValid)
             {
-                var user = await _usermanager.FindByNameAsync(model.Email);
+                var user = await _usermanager.FindByEmailAsync(model.Email);
                 if (user != null && !user.EmailConfirmed)
                 {
                     model.ExternalLogins = (await _signinmanager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -123,6 +123,7 @@ namespace Ecommerce.Identity.Areas.Login
         }
         [AllowAnonymous]
         [HttpPost]
+    
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });

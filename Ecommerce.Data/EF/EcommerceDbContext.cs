@@ -44,6 +44,8 @@ namespace Ecommerce.Data.EF
 
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppRole> AppRoles { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }

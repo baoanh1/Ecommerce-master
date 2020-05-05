@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    @{
+        var d = 0;
+    }
 
 
     <title>@ViewData["Title"] - Mua ban do cu</title>
@@ -18,7 +20,8 @@
     <link rel="stylesheet" href="~/css/full.min.css">
     <script src="~/lib/vue/vue.js"></script>
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles for this template-->
@@ -30,18 +33,23 @@
         var ecommerce = {};
         window.ecommerce = ecommerce;
         ecommerce.baseUrl = "@Url.Content("~/")";
+         var baseUrl = "@Url.Content("~/")";
     </script>
 
 </head>
 <body>
     <header>
+        
         @await Html.PartialAsync("_Header.cshtml")
         
     </header>
     
     <div class="container">
+        @await Html.PartialAsync("_IconMain.cshtml")
+
        
-        <main role="main" class="pb-3 pt-lg-5 pb-5" style="background-color:#fff">
+        <partial name="_BreadCrumbs" />
+        <main role="main" class="pb-3 pt-lg-1 pb-5" style="background-color:#fff">
             @RenderBody()
             @await Html.PartialAsync("Partial/_Notifications.cshtml")
             @await Html.PartialAsync("Partial/_AlertDialog.cshtml")
@@ -54,9 +62,10 @@
 
     <script src="~/js/tinymcevue.js"></script>
     @RenderSection("Scripts", required: false)
-<footer class="page-footer font-small blue-grey lighten-5">
 
-    <div style="background-color: #21d192;">
+<footer class="page-footer font-small blue-grey lighten-5">
+    
+    <div style="background: #0777bc url(/Assset/Pront/images/bg-box-regis-email.png) no-repeat center center;">
         <div class="container">
 
             <!-- Grid row-->
@@ -64,7 +73,9 @@
 
                 <!-- Grid column -->
                 <div class="col-md-6 col-lg-5 text-center text-md-left mb-4 mb-md-0">
-                    <h6 class="mb-0">Get connected with us on social networks!</h6>
+                    <h6 class="mb-0 text-light">
+                        LIÊN KẾT!
+                    </h6>
                 </div>
                 <!-- Grid column -->
                 <!-- Grid column -->
@@ -72,23 +83,23 @@
 
                     <!-- Facebook -->
                     <a class="fb-ic">
-                        <i class="fab fa-facebook-f white-text mr-4"> </i>
+                        <i class="fab fa-facebook-f text-light mr-4"> </i>
                     </a>
                     <!-- Twitter -->
                     <a class="tw-ic">
-                        <i class="fab fa-twitter white-text mr-4"> </i>
+                        <i class="fab fa-twitter text-light mr-4"> </i>
                     </a>
                     <!-- Google +-->
                     <a class="gplus-ic">
-                        <i class="fab fa-google-plus-g white-text mr-4"> </i>
+                        <i class="fab fa-google-plus-g text-light mr-4"> </i>
                     </a>
                     <!--Linkedin -->
                     <a class="li-ic">
-                        <i class="fab fa-linkedin-in white-text mr-4"> </i>
+                        <i class="fab fa-linkedin-in text-light mr-4"> </i>
                     </a>
                     <!--Instagram-->
                     <a class="ins-ic">
-                        <i class="fab fa-instagram white-text"> </i>
+                        <i class="fab fa-instagram text-light"> </i>
                     </a>
 
                 </div>
@@ -110,7 +121,7 @@
             <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
 
                 <!-- Content -->
-                <h6 class="text-uppercase font-weight-bold">Company name</h6>
+                <h6 class="text-uppercase font-weight-bold">VỀ CHÚNG TÔI</h6>
                 <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
                 <p>
                     Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
@@ -124,7 +135,9 @@
             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
 
                 <!-- Links -->
-                <h6 class="text-uppercase font-weight-bold">Products</h6>
+                <h6 class="text-uppercase font-weight-bold">
+                    HỖ TRỢ KHÁCH HÀNG
+                </h6>
                 <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
                 <p>
                     <a class="dark-grey-text" href="#!">MDBootstrap</a>
@@ -145,7 +158,7 @@
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
 
                 <!-- Links -->
-                <h6 class="text-uppercase font-weight-bold">Useful links</h6>
+                <h6 class="text-uppercase font-weight-bold">Nội qui và Quy chế</h6>
                 <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
                 <p>
                     <a class="dark-grey-text" href="#!">Your Account</a>
@@ -166,7 +179,9 @@
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
 
                 <!-- Links -->
-                <h6 class="text-uppercase font-weight-bold">Contact</h6>
+                <h6 class="text-uppercase font-weight-bold">
+                    LIÊN HỆ
+                </h6>
                 <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
                 <p>
                     <i class="fas fa-home mr-3"></i> New York, NY 10012, US
@@ -190,9 +205,11 @@
     </div>
     <!-- Footer Links -->
     <!-- Copyright -->
+    <hr />
     <div class="footer-copyright text-center text-black-50 py-3">
-        © 2020 Copyright:
-        <a class="dark-grey-text" href="https://mdbootstrap.com/"> MDBootstrap.com</a>
+        <section class="appWrapper-DesktopFooter-container-bottom">
+            <address class="appWrapper-DesktopFooter-address">CÔNG TY TNHH Mua Bán Đồ Cũ - Địa chỉ: Phòng 1808, Tầng 18, Mê Linh Point Tower, 02 Ngô Đức Kế, Phường Bến Nghé, Quận 1, TP Hồ Chí Minh <br>Giấy chứng nhận đăng ký doanh nghiệp số 0312120782 do Sở Kế Hoạch và Đầu Tư TPHCM cấp ngày 11/01/2013 <br>Email: trogiup@docu.vn - Đường dây nóng: (028)38664041</address>
+        </section>
     </div>
     <!-- Copyright -->
 

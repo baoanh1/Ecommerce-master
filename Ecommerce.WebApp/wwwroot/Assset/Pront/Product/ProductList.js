@@ -100,7 +100,7 @@
                 confirmIcon: "fa fa-trash",
                 confirmText: "delete",
                 onConfirm: function () {
-                    fetch(baseUrl + "admin/product/delete/" + product.id)
+                    fetch(baseUrl + "user/product/delete/" + product.id)
                         .then(function (response) {
                             ok = response.ok;
                             return response.json();

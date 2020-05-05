@@ -1,44 +1,117 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Ecommerce.Data.Entities
 @using Ecommerce.Identity.Areas.Identity.ViewModels
+@using Ecommerce.WebApp.Extension
+@inject Ecommerce.Application.Services.IUnitOfWork uow
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+@{
+    var category = new Children(uow).GetLayers();
+}
 
-    <!-- Sidebar Toggle (Topbar) -->
-    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-        <i class="fa fa-bars"></i>
-        <span>fafafaf</span>
-    </button>
-    <div class="loggo">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">identity2</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+    <nav class="navbar fixed-top navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+        <!-- Sidebar Toggle (Topbar) -->
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+            <span>fafafaf</span>
         </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+        <div class="loggo">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-2x text-warning fa-shopping-cart"></i>Đồ Cũ</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 
-        </div>
-    </div>
-    <!-- Topbar Search -->
-    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
             </div>
         </div>
-    </form>
-    <partial name="_LoginPartial" />
-    @if (SignInManager.IsSignedIn(User))
-    {
+        <div class="">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
 
-    }
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse row" id="navbar">
+
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item dropdown megamenu-li">
+                                    <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"> Category</i></a>
+                                    <div class="dropdown-menu megamenu" aria-labelledby="dropdown01">
+                                        <div class="row categoryrow">
+                                            @if (category != null)
+                                            {
+                                                @foreach (var item in category)
+                                                {
+                                                    <div class="col-sm-6 col-lg-3">
+                                                        <a class="categoryparent" href="@Url.Content("/productincategory/"+item.ID)"><h5 class="categorytext bg-warning"><i class="pl-2 fa fa-check-square pr-1" aria-hidden="true"></i>@item.Name</h5></a>
+                                                        @if (item.ChildLayers.Count > 0)
+                                                        {
+                                                            @foreach (var i in item.ChildLayers)
+                                                            {
+                                                                <a class="dropdown-item catgory-hover" href="@Url.Content("/productincategory/"+i.ID)"><i class="fa fa-angle-double-right pr-1" aria-hidden="true"></i>@i.Name</a>
+                                                                @if (i.ChildLayers.Count > 0)
+                                                                {
+                                                                    @foreach (var ch in i.ChildLayers)
+                                                                    {
+                                                                        <a class="dropdown-item pr-2" @Url.Content("/productincategory/{categoryid}") href="#"><i class="fa fa-angle-double-right pr-1" aria-hidden="true"></i>@ch.Name</a>
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        }
 
 
-</nav>
+                                                    </div>
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topbar Search -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <div id="searchform">
+
+                    <div class="form-group">
+                        <autocomplete :data="people" field="name"></autocomplete>
+                    </div>
+                </div>
+            </div>
+            </form>
+            <script src="~/Assset/Pront/Search.js"></script>
+            @*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2" v-on:click.prevent="searchform($event)">
+                    <div class="input-group-append">
+                        <button class="btn btn-warning" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>*@
+
+            <partial name="_LoginPartial" />
+            @if (SignInManager.IsSignedIn(User))
+            {
+
+            }
+
+
+    </nav>
+
 <div id="demo" class="carousel slide mt-n4" data-ride="carousel">
 
     <!-- Indicators -->
@@ -69,3 +142,11 @@
     </a>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $(".megamenu").on("click", function (e) {
+            e.stopPropagation();
+        });
+    });
+
+</script>

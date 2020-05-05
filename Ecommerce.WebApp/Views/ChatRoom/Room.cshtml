@@ -8,7 +8,10 @@
 }
 @section scripts{
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="@Url.Content("~/Admin/assets/notifications.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Admin/assets/alert.js")" type="text/javascript"></script>
     <script src="~/Assset/Pront/Chatroom.js"></script>
+
     <script>
 
         mychatroom.currentUserName = "@User.Identity.Name";
@@ -18,42 +21,71 @@
 }
 <h1>Room</h1>
 
-<div id="chatroom">
-    {{messages.length}}
-    <input type="button" v-for="mes in chatroomlist.chats" :value="mes.id" v-on:click.prevent="viewmessage(mes.userIDs)" />
-<textarea name="message" id="message">
-</textarea>
-
-
-    <input type="button" id="sendButton" value="Send Message" v-on:click.prevent="SendButton()" />
-    <div id="messagesID"></div>
-
-    <form id="group-chat" class="form-horizontal col-md-8" role="form" method="POST" v-on:submit.prevent="sendMessage">
-
-        <div id="messages">
-            <div v-if="messages.length">
-                <message v-for="message in messages" :key="message.id" :sender="message.senderID" :message="message.mes" :createdat="message.createdDate"></message>
+<div id="chatroom" class="row">
+    <div class="col-md-4 pl-5">
+        <div v-for="mes in chatroomlist.chats" class="leftchat">
+            <div class="no-arrow mx-1">
+                <div v-if="mes.receiver==currentUserName&&mes.receiverStatus==1" class="border-bottom mb-3">
+                    <i class="fas fa-envelope fa-fw"></i>
+                    <!-- Counter - Messages -->
+                    <span class="badge badge-danger badge-counter" v-on:click.prevent="viewmessage(mes.userIDs)">{{mes.unReaded}}</span>
+                    <span class="">{{mes.sender}}</span>
+                    <i class="fa fa-trash pl-5 pull-right" v-on:click.prevent="deletechat(mes.id)"></i>
+                
+                </div>
+                <div v-if="mes.receiver!=currentUserName&&mes.senderStatus==1" class="border-bottom mb-3">
+                    <i class="fas fa-envelope fa-fw"></i>
+                    <!-- Counter - Messages -->
+                    <span class="badge badge-danger badge-counter" v-on:click.prevent="viewmessage(mes.userIDs)">{{mes.unReaded}}</span>
+                    <span class="">{{mes.receiver}}</span>
+                    <i class="fa fa-trash pl-5 pull-right" v-on:click.prevent="deletechat(mes.id)"></i>
+                </div>
+                
             </div>
-            <div v-else>
-                <div class="alert alert-warning">No chat yet!</div>
+
+            
+        </div>
+
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div v-if="chatroomlist.chatroom.receiver==currentUserName" class="panel-heading">Private Chat with {{chatroomlist.chatroom.sender}}</div>
+            <div v-else class="panel-heading">Private Chat with {{chatroomlist.chatroom.receiver}}</div>
+            <div class="panel-body">
+                <form id="group-chat" class="form-horizontal" role="form" method="POST" v-on:submit.prevent="sendMessage">
+
+                    <div id="messages">
+                        <div v-if="messages.length">
+                            <ul class="scole">
+                                <message v-for="message in messages" :key="message.id" :sender="message.senderName" :message="message.mes" :createdat="message.createdDate"></message>
+                            </ul>
+                            
+                        </div>
+                        <div v-else>
+                            <div class="alert alert-warning">No chat yet!</div>
+                        </div>
+                    </div>
+                    <span class="typing" v-if="isTyping"><i><span></span> is typing</i></span>
+                    <hr />
+                    <div class="form-group chat-box row">
+                        <div class="col-md-10">
+                            <textarea id="message" v-model="chatroomlist.message.mes" type="textarea" class="form-control message" name="message" v-on:keyup.enter="sendMessage" v-on:keypress="" required autofocus></textarea>
+
+
+
+                        </div>
+                        <div class="col-md-2 chat-btn">
+                            <button type="submit" class="sendchat btn btn-primary" v-on:submit.prevent="sendMessage" :disabled="!chatroomlist.message.mes">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <span class="typing" v-if="isTyping"><i><span></span> is typing</i></span>
-        <hr />
-        <div class="form-group chat-box">
-            <div class="col-md-10">
-                <textarea v-model="chatroomlist.message.mes" type="textarea" class="form-control" name="message" v-on:keyup.enter="sendMessage" v-on:keypress="" required autofocus></textarea>
+    </div>
 
 
-
-            </div>
-            <div class="col-md-2 chat-btn">
-                <button type="submit" class="sendchat btn btn-primary" v-on:submit.prevent="sendMessage" :disabled="!chatroomlist.message.mes">
-                    Send
-                </button>
-            </div>
-        </div>
-    </form>
 </div>
 @*<div>*@
 

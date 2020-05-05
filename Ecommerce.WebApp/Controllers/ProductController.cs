@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Ecommerce.Application.Services;
@@ -10,14 +11,16 @@ using Ecommerce.Data.Entities;
 using Ecommerce.WebApp.Areas.Admin.ProductModel;
 using Ecommerce.WebApp.Areas.Admin.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartBreadcrumbs.Attributes;
 
 namespace Ecommerce.WebApp.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "member")]
     //[Area("admin")]
     //[Route("product/[action]")]
 
@@ -30,8 +33,9 @@ namespace Ecommerce.WebApp.Controllers
         IRepository<Province> _provinceRepository;
         IRepository<District> _districtRepository;
         IRepository<State> _StateRepository;
+        IHostingEnvironment _env;
         private UserManager<AppUser> _usermanager { get; }
-        public ProductController(IUnitOfWork uow, UserManager<AppUser> usermanager)
+        public ProductController(IUnitOfWork uow, UserManager<AppUser> usermanager, IHostingEnvironment env)
         {
             _UOW = uow;
             _ProductRepository = _UOW.GetRepository<Product>();
@@ -41,13 +45,16 @@ namespace Ecommerce.WebApp.Controllers
             _districtRepository = uow.GetRepository<District>();
             _StateRepository = _UOW.GetRepository<State>();
             _usermanager = usermanager;
+            _env = env;
         }
         [Route("user/products")]
-        public IActionResult List()
+        [Breadcrumb("ProductList")]
+        public IActionResult Index()
         {
             return View();
         }
         [Route("user/product/list/{index}/{size}/{from}")]
+        [Breadcrumb("PorductList")]
         public IPaginate<ProductListModel.ListItem> Get(int index, int size, int from)
         {
             var currentUserID = _usermanager.GetUserId(User);
@@ -66,19 +73,31 @@ namespace Ecommerce.WebApp.Controllers
             return productList;
         }
         [Route("/user/product/add")]
+        [Breadcrumb("add")]
         public ProductEditModel Add()
         {
+            var root = _env.WebRootPath;
+            var currentUserID = _usermanager.GetUserId(User);
+            string path = root + "\\uploads\\" + currentUserID;
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             return ProductEditModel.Create(_ProductRepository, _ProductCategoryRepository, _ProductImageRepository, _provinceRepository, _districtRepository, _StateRepository);
         }
         [HttpGet]
+        [Breadcrumb("Create")]
         public IActionResult Create()
         {
+            
             ViewBag.productID = 0;
             return View();
 
         }
 
         [Route("/user/product/{id?}")]
+        [Breadcrumb("edit")]
         public IActionResult Edit(int id)
         {
             ViewBag.productID = id;
@@ -90,6 +109,7 @@ namespace Ecommerce.WebApp.Controllers
             return ProductEditModel.GetById(_ProductRepository, _ProductCategoryRepository, _ProductImageRepository, _provinceRepository, _districtRepository, _StateRepository, id);
         }
         [HttpPost]
+        [Breadcrumb("save")]
         [Route("/user/product/save")]
 
         public async Task<IActionResult> Save([FromBody] ProductEditModel model)

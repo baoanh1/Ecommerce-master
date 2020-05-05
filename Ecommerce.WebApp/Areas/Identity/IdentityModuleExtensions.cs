@@ -16,7 +16,7 @@ namespace Ecommerce.Identity.Areas.Identity
 {
     public static class IdentityModuleExtensions
     {
-        public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
+        public static IServiceCollection AddCustomIdentity(this IServiceCollection services, IConfiguration Configuration)
         {
             
 
@@ -32,8 +32,10 @@ namespace Ecommerce.Identity.Areas.Identity
 
             services.AddAuthentication().AddGoogle(option =>
             {
-                option.ClientId = "321191039276-rhjpf9put7r6iek3qv1hm5kk9jb4bq2n.apps.googleusercontent.com";
-                option.ClientSecret = "rsUXY7ZxI6ih2eQFzB5Aao-S";
+                option.ClientId = Configuration["Authentication:Google:ClientId"];
+                option.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                //option.ClientId = "321191039276-rhjpf9put7r6iek3qv1hm5kk9jb4bq2n.apps.googleusercontent.com";
+                //option.ClientSecret = "rsUXY7ZxI6ih2eQFzB5Aao-S";
             })
                  .AddFacebook(option =>
                  {

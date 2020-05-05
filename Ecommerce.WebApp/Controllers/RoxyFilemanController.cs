@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Ecommerce.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
@@ -25,18 +28,18 @@ namespace Ecommerce.WebApp.Controllers
         private string _filesRootVirtual;
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _lang = null;
-
-        public RoxyFilemanController(IHostingEnvironment env)
+        public RoxyFilemanController(IHostingEnvironment env, IHttpContextAccessor httpContextAccessor)
         {
             // Setup CMS paths to suit your environment (we usually inject settings for these)
             _systemRootPath = env.ContentRootPath;
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+           
             _tempPath = _systemRootPath + "\\wwwroot\\CMS\\Temp";
-            _filesRootPath = "/wwwroot/CMS/Content";
-            _filesRootVirtual = "/CMS/Content";
+            _filesRootPath = "/wwwroot/uploads/" + userId;
+            _filesRootVirtual = "/uploads/" + userId;
             // Load Fileman settings
             LoadSettings();
         }
-
         private void LoadSettings()
         {
             _settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(System.IO.File.ReadAllText(_systemRootPath + "/wwwroot/lib/fileman/conf.json"));
@@ -52,6 +55,7 @@ namespace Ecommerce.WebApp.Controllers
         #region API Actions
         public IActionResult DIRLIST(string type)
         {
+            LoadSettings();
             try
             {
                 DirectoryInfo d = new DirectoryInfo(GetFilesRoot());

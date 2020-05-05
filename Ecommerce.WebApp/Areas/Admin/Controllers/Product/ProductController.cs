@@ -16,10 +16,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.WebApp.Areas.Admin.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "admin")]
     [Area("admin")]
     //[Route("admin/[controller]")]
-
+    //[Route("admin")]
     public class ProductController : MessageController
     {
         IUnitOfWork UOW;

@@ -6,11 +6,12 @@ using Ecommerce.Application.Services;
 using Ecommerce.Application.Services.Paging;
 using Ecommerce.Data.Entities;
 using Ecommerce.WebApp.Areas.Admin.ProductCategoryModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.WebApp.Areas.Admin.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "admin")]
     [Area("admin")]
     //[Route("admin/[controller]")]
 

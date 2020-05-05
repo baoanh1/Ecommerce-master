@@ -1,0 +1,243 @@
+﻿@model ProductInCategoryModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+@section scripts{
+    
+    <script src="@Url.Content("~/Admin/assets/notifications.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Assset/Pront/ProductInCategory.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Admin/assets/alert.js")" type="text/javascript"></script>
+    <script>
+
+        productincategory.currentUserName = "@User.Identity.Name";
+        var baseUrl = "@Url.Content("~/")";
+        productincategory.load('@ViewBag.cateid');
+    </script>
+}
+<div id="productincategory">
+    
+    <div class="category-content bg-gray-100 p-1">
+        <div class="row">
+            
+            <div class="col-md-3 border-right">
+                <ul v-if="collapseopen==true" class="navbar-nav sidebar accordion" id="accordionSidebar">
+                    <li class="nav-item">
+                        <a class="nav-link" v-on:click="parentcatetoggle()" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-plus-square fa-cog"></i>
+                            <span>{{productModel.curentProductCategory.name}}</span>
+                        </a>
+                        <div id="collapseTwo" class="collapse mt-n3 show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class=" py-2 collapse-inner rounded">
+                                <a class="collapse-item text-primary" v-on:click="getproductbycateID(productModel.curentProductCategory.id)"><i class="fa fa-angle-double-right"></i> Tất cả</a>
+                                <a v-for="cate in productModel.productCategory" class="collapse-item text-primary" v-on:click="getproductbycateID(cate.id)"><i class="fa fa-angle-double-right"></i> {{cate.name}}</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div v-else class="bs-example">
+                    <div class="accordion" id="accordionExample">
+                        <div v-for="leyer0 in productModel.productCategories" :class="'card '+leyer0.show">
+
+                            <div class="bg-light" :id="'headingOne'+leyer0.id">
+                                <h2 class="mb-0">
+                                    <button type="button" v-on:click.prevent="parentcatetoggle(leyer0.id)" class="btn btn-link" data-toggle="collapse" :data-target="'#collapseOne'+leyer0.id"><i class="fa fa-plus-square pr-2"></i>{{leyer0.name}}</button>
+                                </h2>
+                            </div>
+                            <div :id="'collapseOne'+leyer0.id" class="collapse" :aria-labelledby="'headingOne'+leyer0.id" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <a class="collapse-item text-primary" v-on:click="getproductbycateID(leyer0.id)"><i class="fa fa-angle-double-right"></i> Tất cả</a>
+                                    <a v-if="leyer0.childLayers.length>0" v-for="layer1 in leyer0.childLayers" class="collapse-item text-primary" v-on:click="getproductbycateID(layer1.id)"><i class="fa fa-angle-double-right"></i> {{layer1.name}}</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*<ul class="navbar-nav sidebar accordion" id="accordionSidebar">
+            <li class="nav-item">
+                <a class="nav-link" v-on:click="parentcatetoggle($event)" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-plus-square fa-cog"></i>
+                    <span>{{productModel.curentProductCategory.name}}</span>
+                </a>
+                <div id="collapseTwo" class="collapse mt-n3 show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class=" py-2 collapse-inner rounded">
+                        <a class="collapse-item text-primary" v-on:click="getproductbycateID(productModel.curentProductCategory.id)"><i class="fa fa-angle-double-right"></i> Tất cả</a>
+                        <a v-for="cate in productModel.productCategory" class="collapse-item text-primary" v-on:click="getproductbycateID(cate.id)"><i class="fa fa-angle-double-right"></i> {{cate.name}}</a>
+                    </div>
+                </div>
+            </li>
+        </ul>*@
+
+                @*<ul v-for="leyer0 in productModel.productCategories" class="navbar-nav sidebar accordion" id="accordionSidebar">
+            <li class="nav-item">
+                <a class="nav-link" v-on:click="parentcatetoggle($event)" href="#" data-toggle="collapse" :data-target="'#collapseTwo'+leyer0.id" aria-expanded="true" :aria-controls="'collapseTwo'+leyer0.id">
+                    <i class="fas fa-plus-square fa-cog"></i>
+                    <span>{{leyer0.name}}</span>
+                </a>
+
+                <div :id="'collapseTwo'+leyer0.id" class="collapse mt-n3" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class=" py-2 collapse-inner rounded">
+                        <a class="collapse-item text-primary" v-on:click="getproductbycateID(productModel.curentProductCategory.id)"><i class="fa fa-angle-double-right"></i> Tất cả</a>
+                        <a v-if="leyer0.childLayers.length>0" v-for="layer1 in leyer0.childLayers" class="collapse-item text-primary" v-on:click="getproductbycateID(cate.id)"><i class="fa fa-angle-double-right"></i> {{layer1.name}}</a>
+                    </div>
+                </div>
+            </li>
+        </ul>*@
+            </div>
+
+            <div class="col-md-9">
+
+
+                <div class="row justify-content-center pb-5 pt-3">
+                    <select id="cars" v-on:change="filterfirstcondition($event)">
+                        <option value="default" selected>Mặc định</option>
+                        <option value="newtoold">Tin mới đến cũ</option>
+                        <option value="oldtonew">Tin cũ đến mới</option>
+                        <option value="lowtohigh">Giá từ thấp đến cao</option>
+                        <option value="hightolow">Giá từ cao đến thấp</option>
+                    </select>
+                    <!-- Button to Open the Modal -->
+                    <button type="button" class="border-0 ml-5" v-on:click="priceslide()" data-toggle="modal" data-target="#myModalfilter">
+                        <a class="btn" href="javascript:">
+                            <span id="spnPriceFromText">0 đồng</span> - <span id="spnPriceToText">Không giới hạn</span>
+                            <span class="caret"></span>
+                        </a>
+                    </button>
+
+                    <!-- The Modal -->
+                    <div class="modal mt-lg-5" id="myModalfilter">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+
+
+                                    <div id="rangeBox">
+                                        <div id="sliderBox">
+
+                                            <span class="caret"></span>
+                                            <input type="range" id="slider0to50" value="0" step="1" min="0" max="20">
+                                            <input type="range" id="slider51to100" step="1" min="0" max="20">
+                                        </div>
+                                        <div id="inputRange" class="text-center">
+                                            <span id="min1" class="">Từ 0 đồng</span> - <span id="max1" class="max">Đến: Không giới hạn</span>
+                                            <input type="hidden" step="1" min="0" max="20" placeholder="Min" id="min">
+                                            <input type="hidden" step="1" min="0" max="20" placeholder="Max" id="max">
+                                        </div>
+                                        <div class="filter-btn text-center">
+                                            <button v-on:click.prevent="filtersubmit()" class="btn btn-primary btn-sm"> Lọc </button>
+                                        </div>
+                                    </div>
+                                    @*<div data-role="main" class="ui-content">
+                            <form method="post" action="/action_page_post.php">
+                                <div data-role="rangeslider">
+                                    <label for="price-min">Price:</label>
+                                    <input type="range" name="price-min" id="price-min" value="200" min="0" max="1000">
+                                    <label for="price-max">Price:</label>
+                                    <input type="range" name="price-max" id="price-max" value="800" min="0" max="1000">
+                                </div>
+                                <input type="submit" data-inline="true" value="Lọc">
+
+                            </form>
+                        </div>*@
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Button to Open the Modal -->
+                    <button type="button" class="btn btn-light pull-right fa fa-map-marker" data-toggle="modal" data-target="#filtermodel">
+                        Chọn khu vực <i class="fa fa-angle-down"></i>
+                    </button>
+
+                    <!-- The Modal -->
+                    <div class="modal" id="filtermodel">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header text-green">
+                                    <h5 class="text-white">Địa phương</h5>
+
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <span class="p-2">Chọn địa phương mua bán của bạn (Thành phố, Tỉnh), dữ liệu sẽ được tự động lọc theo địa phương này.</span>
+                                <hr />
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <div class="portlet-body">
+                                        <section class="mx-2 pb-3">
+
+                                            <ul class="nav nav-tabs md-tabs" id="myTabMD" role="tablist">
+                                                <li class="nav-item waves-effect waves-light">
+                                                    <a class="nav-link active" id="home-tab-md" data-toggle="tab" href="#home-md" role="tab" aria-controls="home-md" aria-selected="true">Thông tin cá nhân</a>
+                                                </li>
+                                                <li class="nav-item waves-effect waves-light">
+                                                    <a class="nav-link" id="profile-tab-md" data-toggle="tab" href="#profile-md" role="tab" aria-controls="profile-md" aria-selected="false">Sản phẩm đăng bán</a>
+                                                </li>
+                                                
+                                            </ul>
+                                            <div class="tab-content card pt-5" id="myTabContentMD">
+                                                <div class="tab-pane fade show active" id="home-md" role="tabpanel" aria-labelledby="home-tab-md">
+                                                    <div class="container tab-pane">
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">Ha Noi</a><hr />
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">HCM</a><hr />
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">Da Nang</a>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="profile-md" role="tabpanel" aria-labelledby="profile-tab-md">
+                                                    <div class="container tab-pane">
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">Hai Phong</a><hr />
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">Thanh Hoa</a><hr />
+                                                        <i class="fa fa-angle-double-right text-warning"></i><a v-on:click="filterlocation($event)" href="#">Quang Ninh</a>
+                                                    </div>
+
+                                                </div>
+                                               
+                                            </div>
+
+                                        </section>
+                                    </div>
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+                </div>
+
+
+                <div class="row text-center">
+                    <product v-for="item in product"
+                             :key="item.id"
+                             :linkhref="'/productdetail/' + item.id"
+                             :imagepath="item.images[0].imagePath"
+                             :productuser="item.productUserName"
+                             :name="item.name"
+                             :detail="item.detail"
+                             :price="item.price"
+                             :province="item.provinceName"
+                             :district="item.districtName"
+                             :state="item.stateName">
+                    </product>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

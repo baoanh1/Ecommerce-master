@@ -64,6 +64,7 @@ namespace Ecommerce.WebApp.Areas.Admin.ProductModel
             if (product == null)
             {
                 Product.UserID = userid;
+                Product.CreatedDate = DateTime.Now;
                 ProductRepository.Add(Product);
                 
 

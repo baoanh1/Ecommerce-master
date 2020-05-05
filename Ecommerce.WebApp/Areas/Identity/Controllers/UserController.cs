@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Ecommerce.Data.Entities;
 using Ecommerce.Identity.Areas.Identity.ViewModels;
 using Ecommerce.WebApp.Areas;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Identity.Areas.Identity.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Identity")]
     public class UserController : MessageController
     {

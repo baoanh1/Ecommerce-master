@@ -10,7 +10,7 @@ namespace Ecommerce.Data.Entities
         public int ChatRoomID { get; set; }
         public string SenderID { get; set; }
         public string Mes { get; set; }
-        public int Status { get; set; }
+        public bool Status { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }

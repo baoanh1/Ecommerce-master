@@ -27,12 +27,12 @@ namespace Ecommerce.Identity.Chat.Hubs
         }
         public Task JoinGroup(string group)
         {
-            var res = Groups.AddToGroupAsync(Context.ConnectionId, group);
+            var res = (group!="0"&& group!=null) ?Groups.AddToGroupAsync(Context.ConnectionId, group): Task.FromResult(0);
             return res;
         }
         public Task LeaveGroup(string group)
         {
-            var res = Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+            var res = (group != "0" && group != null) ? Groups.RemoveFromGroupAsync(Context.ConnectionId, group) : Task.FromResult(0);
             return res;
         }
         public Task SendMessageToGroup(string group, string message)

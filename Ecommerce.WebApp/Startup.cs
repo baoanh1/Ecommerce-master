@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartBreadcrumbs.Extensions;
 
 namespace Ecommerce.WebApp
 {
@@ -56,11 +57,23 @@ namespace Ecommerce.WebApp
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-           
+            var sv1 = services.AddCustomIdentity(Configuration);
             services.AddMvc();
-            var sv1 = services.AddCustomIdentity();
+            
             services.AddSignalR();
+            services.AddBreadcrumbs(GetType().Assembly, options =>
+            {
+                options.DontLookForDefaultNode = true;
+                options.TagName = "nav";
+                options.TagClasses = "mynav";
+                options.OlClasses = "breadcrumb fa fa-home";
+                options.LiClasses = "breadcrumb-item";
+                options.ActiveLiClasses = "breadcrumb-item active";
+                options.SeparatorElement = "<li class=\"separator pl-2 pr-2\"> <i class=\"fa fa-angle-double-right\"></i> </li>";
+                // Testing
+                options.DontLookForDefaultNode = true;
 
+            });
             
         }
 
@@ -77,14 +90,14 @@ namespace Ecommerce.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-           
+            
             //DefaultIdentitySeed.SeedData(userManager, roleManager);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRouting();
             app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthorization();
             app.UseSession();
             app.UserChatModule();
             app.useAdminModule();

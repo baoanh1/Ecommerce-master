@@ -1,5 +1,5 @@
 {
-  "FILES_ROOT": "[set within controller]",
+ "FILES_ROOT": "[set within controller]",
   "RETURN_URL_PREFIX": "",
   "SESSION_PATH_KEY": "RoxyFilemanLastPath",
   "THUMBS_VIEW_WIDTH": "140",

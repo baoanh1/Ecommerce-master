@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ecommerce.Data.Entities;
 using Ecommerce.WebApp.Areas.Identity.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Identity.Areas.Identity.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Identity")]
     public class RoleController : Controller
     {

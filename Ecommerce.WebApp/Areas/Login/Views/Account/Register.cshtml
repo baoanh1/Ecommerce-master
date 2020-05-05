@@ -3,10 +3,78 @@
 @{
     ViewData["Title"] = "Register";
 }
+<nav class="navbar navbar-expand-sm bg-primary">
 
+    <!-- Links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-white" href="@Url.ActionLink("Index","Home")">Home </a>
+        </li>
 
+    </ul>
 
-    <div class="row">
+</nav>
+<hr />
+<div class="container">
+    <div class="card bg-light">
+        <article class="card-body mx-auto" style="width:500px; max-width: 600px;">
+            <form method="post" asp-action="ExternalLogin">
+                <div>
+                    <button type="submit" name="provider" value="Google" class="btn btn-block btn-google"> <i class="fa fa-google"></i>   Login via Google</button>
+                    <button type="submit" name="provider" value="Facebook" class="btn btn-block btn-facebook"> <i class="fa fa-facebook"></i>   Login via Facebook</button>
+                </div>
+            </form>
+            <p class="divider-text">
+                <span class="bg-light">OR</span>
+            </p>
+            <form asp-action="Register" asp-controller="Account" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input asp-for="UserName" class="form-control" placeholder="Name" type="text">
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input asp-for="Email" class="form-control" placeholder="Email address" type="email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                    </div>
+
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" type="text">
+                </div> <!-- form-group// -->
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input asp-for="Password" class="form-control" placeholder="Create password" type="password" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat password" type="password" required>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+                </div> <!-- form-group// -->
+                <p class="text-center">Have an account? <a href="@Url.ActionLink("Login","Account")">Log In</a> </p>
+            </form>
+        </article>
+    </div> <!-- card.// -->
+
+</div>
+
+@*<div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
             <h2>@ViewData["Title"]</h2>
@@ -33,8 +101,8 @@
             </form>
         </div>
         <div class="col-md-3"></div>
-    </div>
+    </div>*@
 
-        @section Script {
-            @await Html.PartialAsync("_ValidationScriptsPartial")
-        }
+@section Script {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

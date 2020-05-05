@@ -51,7 +51,7 @@ namespace Ecommerce.Data.Extensions
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
                 Email = "phungnhatphu4@gmail.com",
-                NormalizedEmail = "PHUNGNHATPHU4@GMAIL>COM",
+                NormalizedEmail = "PHUNGNHATPHU4@GMAIL.COM",
                 EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "NxP@2020"),
                 SecurityStamp = Guid.NewGuid().ToString("D")
@@ -90,6 +90,14 @@ namespace Ecommerce.Data.Extensions
               new Product { ID = 3, UserID = ADMIN_ID, Name = "Iphone 8", categoryID = 3, StateID = 3 },
               new Product { ID = 4, UserID = ADMIN_ID, Name = "Iphone 9", categoryID = 4, StateID = 3 }
           );
+            modelBuilder.Entity<ProductImage>().HasData
+         (
+             new ProductImage { ID = 1, Name = "image 1", ImagePath= "/CMS/Content/new/14818053_IMG_20200403_143941.jpg" },
+             new ProductImage { ID = 2, Name = "image 2", ImagePath = "/CMS/Content/new/14818053_IMG_20200403_143941.jpg" },
+             new ProductImage { ID = 3, Name = "image 3", ImagePath = "/CMS/Content/new/14818053_IMG_20200403_143941.jpg" },
+             new ProductImage { ID = 4, Name = "image 4", ImagePath = "/CMS/Content/new/14818053_IMG_20200403_143941.jpg" }
+         );
+            
             modelBuilder.Entity<Province>().HasData
          (
              new Province { ID = 1, Name = "Ha Noi", Code=100000},
