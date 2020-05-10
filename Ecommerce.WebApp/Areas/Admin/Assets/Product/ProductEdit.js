@@ -77,11 +77,25 @@ productedit = new Vue({
     },
     updated: function () {
         
+        productedit.loadcategory();
         
     },
     
     mounted() {
+      
         window.addEventListener('load', () => {
+           
+        })
+        window.addEventListener('load', () => {
+            if(!this.isNewProduct) {
+                this.loadDistrict(this.productModel.product.provinceID);
+            }
+
+        })
+    },
+
+    methods: {
+        loadcategory: function () {
             this.htmlstring = '';
             this.htmlstring += '<option value="0">Root</option>';
             this.cate_parent(this.productCategories, 0, "__", this.selectedCateggory);
@@ -90,25 +104,18 @@ productedit = new Vue({
             $('#myselect').text(htmlstring1);
 
             $('#myselect').html($('#myselect').text());
-        })
-        window.addEventListener('load', () => {
-            if (!this.isNewProduct) {
-                this.loadDistrict(this.productModel.product.provinceID);
-            }
-
-        })
-    },
-    methods: {
+        },
         loadDistrict: function (id) {
-            this.districts = this.productModel.districts.filter(function (index) {
+            var district = this.productModel.districts.filter(function (index) {
                 return index.provinceID === id;
             });
+            this.districts = district;
         },
-        onChange(event) {
-            this.districts = this.productModel.districts.filter(function (index) {
-                return index.provinceID === parseInt(event.target.value);
+        onChange(provinceid) {
+            var self = this;
+            self.districts = self.productModel.districts.filter(function (index) {
+                return index.provinceID === parseInt(provinceid);
             });
-            
         },
         getNestedChildren: function (arr, parent) {
             var out = [];
@@ -325,6 +332,7 @@ productedit = new Vue({
         
         bind: function (result) {
             this.productModel = result;
+            this.districts = result.districts;
             this.isNew = result.product.id === "00000000-0000-0000-0000-000000000000";
             
         },
@@ -342,6 +350,7 @@ productedit = new Vue({
                     self.loading = false;
                     self.productCategories = result.productCategorys;
                     self.selectedCateggory = result.product.categoryID;
+                    onChange(result.product.categoryID);
                 })
                 .catch(function (error) { console.log("error:", error); });
         },

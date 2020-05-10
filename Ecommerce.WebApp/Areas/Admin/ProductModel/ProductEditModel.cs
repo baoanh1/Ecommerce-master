@@ -44,8 +44,8 @@ namespace Ecommerce.WebApp.Areas.Admin.ProductModel
                     ProductCategorys = ProductCategoryRepository.GetAll().OrderBy(r => r.ID).ToList(),
                     ProductImages = productImages,
                     Provinces = ProvinceRepository.GetAll().ToList(),
-                Districts = DistrictRepository.GetAll().ToList(),
-                States = StateRepository.GetAll().ToList()
+                    Districts = DistrictRepository.GetAll().ToList(),
+                    States = StateRepository.GetAll().ToList()
                 };
 
                 var Productcate = ProductCategoryRepository.GetByID(product.categoryID).Name;

@@ -164,7 +164,7 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Province</label>
-                                            <select class="form-control" :required="true" v-on:change="onChange($event)" v-model="productModel.product.provinceID">
+                                            <select class="form-control" :required="true" v-on:change="onChange(productModel.product.provinceID)" v-model="productModel.product.provinceID">
                                                 <option value="0">Select Province </option>
                                                 <option v-for="option in productModel.provinces"
                                                         v-bind:value="option.id">
@@ -181,7 +181,7 @@
                                         <div class="form-group">
                                             <label>District</label>
                                             <select class="form-control" :required="true" v-model="productModel.product.districtID">
-                                                <option value="0">Select Province </option>
+                                                <option value="0">Select district </option>
                                                 <option v-for="option in districts"
                                                         v-bind:value="option.id">
                                                     {{option.name}}
@@ -215,7 +215,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group pt-3">
                         <input v-if="!isNewProduct&&productModel.productImages!=0" type="button" class="btn btn-primary" value="Click to update image" v-on:click.prevent="loadimage()" />
 
                         <input v-if="productModel.productImages===0" type="button" class="btn btn-primary" value="Click to add images" v-on:click.prevent="add(0)" />
@@ -295,7 +295,7 @@
         </select>*@
 
 
-                            <select id="myselect" class="form-control" :required="true" v-model.number="productModel.product.categoryID">
+                            <select id="myselect" class="form-control" :required="true" v-model="productModel.product.categoryID">
                             </select>
                             <div class="invalid-feedback">
                                 required

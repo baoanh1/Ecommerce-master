@@ -79,6 +79,7 @@ productedit = new Vue({
         console.log("created");
     },
     updated: function () {
+        productedit.loadcategory();
     },
     mounted: function () {
         var self = this;
@@ -104,17 +105,26 @@ productedit = new Vue({
     },
    
     methods: {
-        
+        loadcategory: function () {
+            this.htmlstring = '';
+            this.htmlstring += '<option value="0">Root</option>';
+            this.cate_parent(this.productCategories, 0, "__", this.selectedCateggory);
+            var htmlstring1 = this.htmlstring;
+            var myselect = document.getElementById("myselect");
+            $('#myselect').text(htmlstring1);
+
+            $('#myselect').html($('#myselect').text());
+        },
         loadDistrict: function (id) {
             var self = this;
             self.districts = self.productModel.districts.filter(function (index) {
                 return index.provinceID === id;
             });
         },
-        onChange(event) {
+        onChange(provinceid) {
             var self = this;
             self.districts = self.productModel.districts.filter(function (index) {
-                return index.provinceID === parseInt(event.target.value);
+                return index.provinceID === parseInt(provinceid);
             });
         },
         cate_parent: function (data, parent, str, select) {
@@ -281,6 +291,7 @@ productedit = new Vue({
         
         bind: function (result) {
             this.productModel = result;
+            this.districts = result.districts;
             this.isNew = result.product.id === "00000000-0000-0000-0000-000000000000";
             this.binded = true;
         },
@@ -298,6 +309,7 @@ productedit = new Vue({
                     self.loading = false;
                     self.productCategories = result.productCategorys;
                     self.selectedCateggory = result.product.categoryID;
+                    onChange(result.product.categoryID);
                 })
                 .catch(function (error) { console.log("error:", error); });
         },

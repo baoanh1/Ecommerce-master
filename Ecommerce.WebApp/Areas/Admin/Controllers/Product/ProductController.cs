@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Ecommerce.Application.Services;
@@ -9,6 +10,7 @@ using Ecommerce.Data.Entities;
 using Ecommerce.WebApp.Areas.Admin.ProductModel;
 using Ecommerce.WebApp.Areas.Admin.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +31,9 @@ namespace Ecommerce.WebApp.Areas.Admin.Controllers
         IRepository<Province> _provinceRepository;
         IRepository<District> _districtRepository;
         IRepository<State> _StateRepository;
+        IHostingEnvironment _env;
         private UserManager<AppUser> _usermanager { get; }
-        public ProductController(IUnitOfWork uow, UserManager<AppUser> usermanager)
+        public ProductController(IUnitOfWork uow, UserManager<AppUser> usermanager, IHostingEnvironment env)
         {
             UOW = uow;
             _productRepository = UOW.GetRepository<Product>();
@@ -40,6 +43,7 @@ namespace Ecommerce.WebApp.Areas.Admin.Controllers
             _districtRepository = UOW.GetRepository<District>();
             _StateRepository = UOW.GetRepository<State>();
             _usermanager = usermanager;
+            _env = env;
         }
         [Route("admin/products")]
         public IActionResult List()
@@ -67,6 +71,14 @@ namespace Ecommerce.WebApp.Areas.Admin.Controllers
         [Route("/admin/product/add")]
         public ProductEditModel Add()
         {
+            var root = _env.WebRootPath;
+            var currentUserID = _usermanager.GetUserId(User);
+            string path = root + "\\uploads\\" + currentUserID;
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             return ProductEditModel.Create(_productRepository, _productCategoryRepository, _productImageRepository, _provinceRepository, _districtRepository, _StateRepository);
         }
         [HttpGet]

@@ -3,7 +3,7 @@
     components: {
         product: {
             props: ['d', 'imagepath','linkhref', 'productuser', 'name', 'detail', 'price', 'province', 'district', 'state'],
-            template: '<div class="col-lg-3 col-md-6 mb-4"><div class= "card h-100"><i class="far fa-heart"></i><a :href="linkhref"> <img v-if="imagepath!=null" style="width:255px; height:255px" class="card-img-top p-3" :src="imagepath" /></a><div class="card-body"><a class="card-title text-success" href="">{{ productuser }}</a><h6 class="card-title text-dark">{{ name }}</h6><p class="card-text">{{ detail }}</p><p class="card-text text-danger">{{ price }}</p></div><div class="row"><div class="col-md-6"><span class="card-text"><i class="fa fa-map-marker text-danger"></i> {{ province }}-{{ district }}</span></div><div class="col-md-6"><span class="card-text">{{ state }}</span></div></div></div></div>',
+            template: '<div class="col-md-3 col-sm-6 col-xs-6 mb-4"><div class= "card h-100"><i class="far fa-heart"></i><a :href="linkhref"> <img v-if="imagepath!=null" style="width:255px; height:255px" class="card-img-top p-3" :src="imagepath" /></a><div class="card-body"><a class="card-title text-success" href="">{{ productuser }}</a><h6 class="card-title text-dark">{{ name }}</h6><p class="card-text">{{ detail }}</p><p class="card-text text-danger">{{ price }}</p></div><div class="row"><div class="col-md-6"><span class="card-text"><i class="fa fa-map-marker text-danger"></i> {{ province }}-{{ district }}</span></div><div class="col-md-6"><span class="card-text">{{ state }}</span></div></div></div></div>',
             filters: {
                 showChatTime: function (createdat) {
                     var date = new Date(createdat);

@@ -206,9 +206,9 @@ namespace Ecommerce.Identity.Areas.Login
                             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                             Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                         };
-
+                        
                         await _usermanager.CreateAsync(user);
-
+                        await _usermanager.AddToRoleAsync(user, "Member");
                         // After a local user account is created, generate and log the
                         // email confirmation link
                         var token = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
